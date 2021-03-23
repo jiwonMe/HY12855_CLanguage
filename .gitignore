@@ -1,0 +1,4 @@
+.vscode
+HW*
+!HW*/
+!*.c
