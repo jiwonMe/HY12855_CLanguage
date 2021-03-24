@@ -1,0 +1,2 @@
+`3rdFlavor` is not legal C identifiers. identifiers can't be started with number.
+`double`, `sizeof` are already 예약어.

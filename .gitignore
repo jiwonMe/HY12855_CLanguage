@@ -2,3 +2,5 @@
 HW*
 !HW*/
 !*.c
+test.c
+!HW*.txt
