@@ -7,7 +7,7 @@ int main(){
     scanf("%d", &x);
     printf(" Input 2nd number (positive or negative) : ");
     scanf("%d", &y);
-    printf(" The absolute value of 1st number is : %d\n", labs(x));
+    printf(" The absolute value of 1st number is : %d\n", labs(x)); //absolute value of long int
     printf(" The absolute value of 2nd number is : %d\n\n", labs(y));
 
     return 0;
