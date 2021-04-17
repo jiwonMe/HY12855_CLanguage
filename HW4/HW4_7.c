@@ -7,6 +7,8 @@ int main(){
     scanf("%d %d %d %d %d", &a,&b,&c,&d,&e);
     printf("%.02f\n", marks=(a+b+c+d+e)/5.0);
     printf("Grade ");
+
+    //marks divide by 10 will be first digit of subject mark.
     marks/=10;
     if(marks>=9) printf("A");
     else if(marks>=8) printf("B");
