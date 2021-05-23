@@ -1,6 +1,14 @@
+*
+!*.*
+!*/
+
 .vscode
 HW*
 !HW*/
 !*.c
 test.c
 !HW*.txt
+*.zip
+zokbo
+MIDTERM
+2021mid
