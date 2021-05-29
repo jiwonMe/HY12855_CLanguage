@@ -1,7 +1,11 @@
 /**
- * Customer reward points program.
- * 2021 Jiwon Park
- * https://github.com/jiwonMe/HY12855_CLanguage
+ * @file main.c
+ * @author Jiwon Park (jwon0615@hanyang.ac.kr)
+ * @brief Customer reward points program.
+ * @version 0.1
+ * @date 2021-05-29
+ * 
+ * @copyright Copyright (c) 2021 Jiwon Park
  * 
  */
 
@@ -9,13 +13,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-//define boolean type
+/**
+ * @typedef boolean
+ * 
+ */
 typedef enum _boolean
 {
     FALSE,
     TRUE
 } boolean;
 
+/**
+ * @typedef Customer
+ * @struct
+ * @param id Customer's ID
+ * @param name Customer Name
+ * @param point Reward point
+ * 
+ */
 typedef struct
 {
     unsigned int id;
@@ -23,28 +38,47 @@ typedef struct
     float point;
 } Customer;
 
-//menu functions
+/**
+ * @brief
+ * functions for menu.
+ *  
+ */
 int menu();
 int __1_add();
 int __2_display();
 int __3_update();
 int __4_exit();
 
-//utils
+/**
+ * @brief 
+ * functions for utility.
+ */
 double input_s();
 Customer *find_by_ID(int id);
 
-//database
+/**
+ * @brief Customer Database,
+ * @var number : number of customers.
+ * 
+ */
 Customer DB[100];
 int number = 0;
 
 int main()
 {
-    //if menu() returned FALSE, exit the program.
+    /** if menu() returned FALSE, exit the program.**/
     while (TRUE)
         menu() ? 0 : exit(0);
 }
 
+/**
+ * @brief 
+ * \b MENU
+ * function for main menu.
+ * 
+ * @return TRUE continue the program
+ * @return FALSE exit the program
+ */
 int menu()
 {
     printf("\n"
@@ -73,6 +107,14 @@ int menu()
     return TRUE;
 }
 
+/**
+ * @brief 
+ * \b ADD
+ * function for add menu.
+ * - add a new customer
+ * 
+ * @return int 
+ */
 int __1_add()
 {
 
@@ -87,7 +129,7 @@ int __1_add()
     printf("Enter Reward_point: ");
     float rewards = input_s();
 
-    //select Customer memory in DB
+    /** select Customer in DB **/
     Customer *selected = &DB[number];
     selected->id = _id;
     strcpy(selected->name, s);
@@ -96,6 +138,14 @@ int __1_add()
     free(s);
 }
 
+/**
+ * @brief 
+ * \b DISPLAY
+ * function for display menu.
+ * - display all customer data
+ * 
+ * @return int - return code 200
+ */
 int __2_display()
 {
     printf("\nID\tName\t\tReward_point\n");
@@ -107,23 +157,34 @@ int __2_display()
     return 200;
 }
 
+/**
+ * @brief 
+ * \b UPDATE
+ * function for update menu.
+ * 
+ * @return int updated customer's ID
+ * @see @typedef Customer
+ */
 int __3_update()
 {
 
     printf("Enter the customer ID to edit the record :");
     int id = (int)input_s();
 
-    //find the customer by ID.
+    /** 
+     * @brief find the customer by ID.
+     * @ref @fn find_by_ID()
+     */
     Customer *selected = find_by_ID(id);
 
-    //if the customer is not exist, return with code -1.
+    /** if the customer is not exist, @return with code -1. */
     if (selected == NULL)
     {
         printf("There is no customer ID %d", id);
         return -1;
     }
 
-    //print customer data
+    /** print customer data **/
     printf("\n"
            "ID : %d\n"
            "Name : %s\n"
@@ -143,17 +204,29 @@ int __3_update()
 
     free(s);
 
-    //return the updated customer id
     return id;
 }
 
+/**
+ * @brief 
+ * \b EXIT 
+ * function for exit menu.
+ * 
+ * @return int return code 0.
+ */
 int __4_exit()
 {
     printf("\nBye!");
     return 0;
 }
 
-//for safe input
+/**
+ * @brief For safe input.
+ * get number as string and convert to double by using atof().
+ * @see @fn atof()
+ * @warning maximum length of input is 255(0xFF).
+ * @return double - inputted number.
+ */
 double input_s()
 {
     char *buff = (char *)malloc(0xFF * sizeof(char));
@@ -163,7 +236,12 @@ double input_s()
     return inputted;
 }
 
-//find by ID : linear search
+/**
+ * @brief find customer by id from DB 
+ * linear search.
+ * @param id customer ID
+ * @return Customer* a pointer to customer be found.
+ */
 Customer *find_by_ID(int id)
 {
     for (int i = 0; i < number; i++)
@@ -171,6 +249,7 @@ Customer *find_by_ID(int id)
         if (DB[i].id == id)
             return &DB[i];
     }
-    //if didn't find, return NULL
+
+    /** didn't found, NULL pointer will be returned. **/
     return NULL;
 }
