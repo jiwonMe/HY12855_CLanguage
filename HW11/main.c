@@ -46,6 +46,10 @@ void quit();
 //add
 boolean isRegistered(User user);
 void reservation(User user);
+void display_seats();
+
+//seat reservation database.
+int seat[10][4] = {};
 
 int main()
 {
@@ -56,14 +60,18 @@ int main()
 
 boolean main_menu()
 {
-    printf("\nWelcome to Hanyang bus reservation!\n\n\n");
-    printf("1 : register!!!\n");
-    printf("2 : login!!!\n");
-    printf("3 : quit\n");
-    printf("Enter your choice :\n");
+    printf("\nWelcome to Hanyang bus reservation!\n\n\n"
+           "1 : register!!!\n"
+           "2 : login!!!\n"
+           "3 : quit\n"
+           "Enter your choice :\n");
+
+    //for safe input
     int choice;
-    scanf("%d", &choice);
-    getchar();
+    char *buff = (char *)malloc(sizeof(char));
+    fgets(buff, 2, stdin);
+    choice = atoi(buff);
+
     switch (choice)
     {
     case 1:
@@ -121,18 +129,26 @@ void registration()
 
 void login()
 {
-    User *user = (User *)malloc(sizeof(User));
-
+    User user;
+    getchar();
     printf("\nUserID : ");
-    fgets(user->userID, MAX_LENGTH, stdin);
-    printf("\nPassword : ");
-    fgets(user->password, MAX_LENGTH, stdin);
+    gets(user.userID);
+    char *line_p;
+    if ((line_p = strchr(user.userID, '\n')) != NULL)
+        *line_p = '\0';
 
-    if (isRegistered(*user))
-        registration(user);
+    printf("\nPassword : ");
+    gets(user.password);
+    if ((line_p = strchr(user.userID, '\n')) != NULL)
+        *line_p = '\0';
+
+    if (isRegistered(user))
+    {
+        printf("You are successfully logged in, welcome :-)\n\n");
+        reservation(user);
+    }
     else
-        printf("\nYour UserID or password is incorrect, please try again :-(");
-    free(user);
+        printf("\nYour UserID or password is incorrect, please try again :-(\n");
     back_to_main();
 }
 
@@ -163,17 +179,58 @@ boolean isRegistered(User user)
     //parse line by line
     while ((read = getline(&line, &len, log)) != -1)
     {
-        char *buff = strtok(line, ", ");
         User temp;
-        while (buff != NULL)
-        {
-            printf("%s\n", buff);
-            buff = strtok(NULL, ", ");
-        }
+        char *buff = strtok(line, ", ");
+        buff = strtok(NULL, ", ");
+        buff = strtok(NULL, ", ");
+        strncpy(temp.userID, buff, sizeof(buff));
+        buff = strtok(NULL, ", ");
+        strncpy(temp.password, buff, sizeof(buff));
+        // printf("%s %s\n", temp.userID, temp.password);
+        // printf("%s %s\n", user.userID, user.password);
+        printf("%d %d\n", strcmp(temp.userID, user.userID), strcmp(temp.password, user.password));
+        printf("%d %d\n", strlen(temp.userID), strlen(user.userID));
 
         if (strcmp(temp.userID, user.userID) == 0 && strcmp(temp.password, user.password) == 0)
             return TRUE;
     }
 
     return FALSE;
+}
+
+void reservation(User user)
+{
+    printf("Reservation Menu\n\n");
+    display_seats();
+    printf("1 : reserve a seat\n"
+           "2 : cancel a seat\n"
+           "3 : Main Menu\n"
+           "Enter your choice :");
+
+    //for safe input
+    int choice;
+    char *buff = (char *)malloc(sizeof(char));
+    fgets(buff, 2, stdin);
+    choice = atoi(buff);
+
+    switch (choice)
+    {
+    case 1:
+        seat_reservation(user);
+    case 2:
+        seat_cancelation(user);
+    default:
+    }
+}
+
+void display_seats()
+{
+    printf("\tSeats\n"
+           "\tWindow\tAisle\tAisle\tWindow\n"
+           "\t%4d\t%4d\t%4d\t%4d\n",
+           1, 2, 3, 4);
+    for (int i = 0; i < 10; i++)
+    {
+        printf("Row %d:\t%4d\t%4d\t%4d\t%4d\n", i + 1, seat[i][0], seat[i][1], seat[i][2], seat[i][3]);
+    }
 }
