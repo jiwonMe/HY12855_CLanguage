@@ -20,12 +20,20 @@
 #define MAX_LENGTH 20
 
 //define boolean type
-typedef enum _boolean
+typedef enum
 {
     FALSE,
     TRUE
 } boolean;
 
+//Seat struct
+typedef struct
+{
+    boolean reserved;
+    char userID[MAX_LENGTH];
+} Seat;
+
+//User info
 typedef struct
 {
     char first_name[MAX_LENGTH];
@@ -52,7 +60,7 @@ void press_any_key_to_continue();
 int input_s();
 
 //seat reservation database.
-int seat[10][4] = {};
+Seat seat[10][4] = {};
 
 int main()
 {
@@ -148,7 +156,9 @@ void login()
     }
     else
     {
+        printf("\033[0;31m");
         printf("\nYour UserID or password is incorrect, please try again :-(\n");
+        printf("\033[0m");
         back_to_main();
     }
 }
@@ -206,7 +216,7 @@ boolean isRegistered(User user)
 
 int reservation(User user)
 {
-    printf("Reservation Menu\n\n");
+    printf("\nReservation Menu\n\n");
     display_seats();
     printf("1 : reserve a seat\n"
            "2 : cancel a seat\n"
@@ -235,7 +245,7 @@ void display_seats()
            1, 2, 3, 4);
     for (int i = 0; i < 10; i++)
     {
-        printf("Row %d:\t%4d\t%4d\t%4d\t%4d\n", i + 1, seat[i][0], seat[i][1], seat[i][2], seat[i][3]);
+        printf("Row %d:\t%4d\t%4d\t%4d\t%4d\n", i + 1, seat[i][0].reserved, seat[i][1].reserved, seat[i][2].reserved, seat[i][3].reserved);
     }
 }
 
@@ -250,7 +260,11 @@ void seat_reservation(User user)
         int row = input_s();
         printf("Which seat do you want to select? : ");
         int col = input_s();
-        seat[row - 1][col - 1] = TRUE;
+
+        Seat *seat_selected = &seat[row - 1][col - 1];
+
+        seat_selected->reserved = TRUE;
+        strcpy(seat_selected->userID, user.userID);
     }
     printf("Reservation complete, thank you :-)\n");
     press_any_key_to_continue();
@@ -268,10 +282,20 @@ void seat_cancelation(User user)
     display_seats();
     printf("Which row do you want to cancel? : ");
     int row = input_s();
-    printf("Which column do you want to cancell? :");
+    printf("Which column do you want to cancel? :");
     int col = input_s();
 
-    seat[row - 1][col - 1] = FALSE;
+    Seat *seat_selected = &seat[row - 1][col - 1];
 
-    printf("Your Seat is Cancelled\n");
+    if (strcmp(user.userID, seat_selected->userID) == 0)
+    {
+        seat_selected->reserved = FALSE;
+        strcpy(seat_selected->userID, NULL);
+
+        printf("Your Seat is Cancelled\n");
+    }
+    else
+    {
+        printf("[CAUTION] It's not your seat!\n");
+    }
 }
