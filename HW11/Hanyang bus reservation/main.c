@@ -248,6 +248,7 @@ void press_any_key_to_continue()
  * @param user 
  * @return TRUE registered.
  * @return FALSE not registered
+ * TODO: except for empty or illegal line
  */
 boolean isRegistered(User user)
 {
@@ -345,7 +346,6 @@ void display_seats()
  * @brief reservating the bus seat.
  * can reserve several seats.
  * @param user 
- * TODO: exception for reservating the seat already reserved.
  */
 void seat_reservation(User user)
 {
@@ -363,6 +363,12 @@ void seat_reservation(User user)
 
         Seat *seat_selected = &seat[row - 1][col - 1];
 
+        if (seat_selected->reserved)
+        {
+            printf("\033[0;31mSelected seat was already reserved!\n\033[0m");
+            press_any_key_to_continue();
+            return;
+        }
         seat_selected->reserved = TRUE;
         strcpy(seat_selected->userID, user.userID);
     }
