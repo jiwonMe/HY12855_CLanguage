@@ -1,13 +1,22 @@
 /**
- * Hanyang bus reservation program.
- * 2021 Jiwon Park
- * https://github.com/jiwonMe/HY12855_CLanguage
+ * @file main.c
+ * @author Jiwon Park (jwon0615@hanyang.ac.kr)
+ * @brief Hanyang bus reservation
+ * @version 0.1
+ * @date 2021-05-29
+ * 
+ * @copyright Copyright (c) 2021 Jiwon Park
  * 
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/**
+ * @brief Preprocess MACROS for different codes by OS.
+ * seperate windows or unix-like OS.
+ */
 
 #if defined(_WIN32) || defined(_WIN64)
 #define PLATFORM_NAME "windows"
@@ -17,23 +26,45 @@
 #define PLATFORM_NAME "unknown"
 #endif
 
+/**
+ * @def MAX_LENGTH
+ * @brief maximum length of strings
+ * 
+ */
 #define MAX_LENGTH 20
 
-//define boolean type
+/**
+ * @typedef boolean
+ * 
+ */
 typedef enum
 {
     FALSE,
     TRUE
 } boolean;
 
-//Seat struct
+/**
+ * @typedef Seat
+ * structure for Seat information.
+ * @a reserved boolean, mark the seat was reserved.
+ * @a userID[MAX_LENGTH] char array, userID whose reserved.
+ * 
+ */
 typedef struct
 {
     boolean reserved;
     char userID[MAX_LENGTH];
 } Seat;
 
-//User info
+/**
+ * @typedef User
+ * structure for user information.
+ * @a first_name
+ * @a last_name
+ * @a userID
+ * @a password
+ * 
+ */
 typedef struct
 {
     char first_name[MAX_LENGTH];
@@ -56,19 +87,28 @@ boolean isRegistered(User user);
 int reservation(User user);
 void display_seats();
 void press_any_key_to_continue();
-
+//for safe input
 int input_s();
 
-//seat reservation database.
+/**
+ * @brief bus seat reservation database.
+ * 
+ */
 Seat seat[10][4] = {};
 
 int main()
 {
     while (TRUE)
-        //if FALSE is returned, quit program.
+        /** if menu() returned FALSE, exit the program.**/
         main_menu() ? 0 : exit(0);
 }
 
+/**
+ * @brief 
+ * main menu
+ * @return TRUE to continue
+ * @return FALSE to exit
+ */
 boolean main_menu()
 {
     printf("\nWelcome to Hanyang bus reservation!\n\n\n"
@@ -94,6 +134,13 @@ boolean main_menu()
     return TRUE;
 }
 
+/**
+ * @brief registration
+ * - save as .csv format
+ * 
+ * @file login.txt
+ * 
+ */
 void registration()
 {
     FILE *log = fopen("login.txt", "a+");
@@ -111,13 +158,12 @@ void registration()
     printf("Enter your password : ");
     fgets(buffer[3], MAX_LENGTH, stdin);
 
-    //save as .csv format
     for (char **ptr = buffer; ptr < buffer + 4; ptr++)
     {
         (*ptr)[strlen(*ptr) - 1] = '\0';
         fprintf(log, "%s, ", *ptr);
     }
-    fprintf(log, "\n"); //line break
+    fprintf(log, "\n");
     fclose(log);
 
     printf("You are successfully registered!!\n");
@@ -125,12 +171,18 @@ void registration()
     printf("Now login with your username and password!!\n");
     back_to_main();
 
-    //free memory
+    /** free the memories **/
     for (char **ptr = buffer; ptr < buffer + 4; ptr++)
         free(*ptr);
     free(buffer);
 }
 
+/**
+ * @brief function for login menu.
+ * @if login successed, start reservation.
+ * @ref @fn reservation();
+ * TODO: encryption for password
+ */
 void login()
 {
     User user;
@@ -174,6 +226,9 @@ void back_to_main()
     press_any_key_to_continue();
 }
 
+/**
+ * press any key to continue
+ */
 void press_any_key_to_continue()
 {
     //implementation of 'press any key to continue' by platform.
@@ -213,6 +268,15 @@ boolean isRegistered(User user)
     return FALSE;
 }
 
+/**
+ * @brief reservation menu.
+ * 1. reserve @ref seat_reservation(User).
+ * 2. cancel @ref seat_cancelation(User).
+ * 
+ * @param user user information who reservating.
+ * @return TRUE continue reservation menu.
+ * @return FALSE exit reservation menu.
+ */
 int reservation(User user)
 {
     printf("\nReservation Menu\n\n");
@@ -230,12 +294,20 @@ int reservation(User user)
     case 2:
         seat_cancelation(user);
         break;
+    /**
+     * @brief Main menu or wrong input,
+     * return FALSE to go Main menu.
+     */
     default:
         return FALSE;
     }
     return TRUE;
 }
 
+/**
+ * @brief display bus seat reservation status.
+ * 
+ */
 void display_seats()
 {
     printf("\tSeats\n"
@@ -248,6 +320,12 @@ void display_seats()
     }
 }
 
+/**
+ * @brief reservating the bus seat.
+ * can reserve several seats.
+ * @param user 
+ * TODO: exception for reservating the seat already reserved.
+ */
 void seat_reservation(User user)
 {
     printf("How many seats do you want to reserve?\n");
@@ -269,13 +347,11 @@ void seat_reservation(User user)
     press_any_key_to_continue();
 }
 
-int input_s()
-{
-    char *buff = (char *)malloc(sizeof(char));
-    fgets(buff, 0xFF, stdin);
-    return atoi(buff);
-}
-
+/**
+ * @brief 
+ * cancelation the reserved bus seat.
+ * @param user 
+ */
 void seat_cancelation(User user)
 {
     display_seats();
@@ -297,4 +373,18 @@ void seat_cancelation(User user)
     {
         printf("[CAUTION] It's not your seat!\n");
     }
+}
+
+/**
+ * @brief For safe input.
+ * get number as string and convert to int using atoi().
+ * @see @fn atoi()
+ * @warning maximum length of input is 255(0xFF).
+ * @return int - inputted number.
+ */
+int input_s()
+{
+    char *buff = (char *)malloc(sizeof(char));
+    fgets(buff, 0xFF, stdin);
+    return atoi(buff);
 }
