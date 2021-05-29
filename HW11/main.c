@@ -45,8 +45,11 @@ void quit();
 
 //add
 boolean isRegistered(User user);
-void reservation(User user);
+int reservation(User user);
 void display_seats();
+void press_any_key_to_continue();
+
+int input_s();
 
 //seat reservation database.
 int seat[10][4] = {};
@@ -66,13 +69,7 @@ boolean main_menu()
            "3 : quit\n"
            "Enter your choice :\n");
 
-    //for safe input
-    int choice;
-    char *buff = (char *)malloc(sizeof(char));
-    fgets(buff, 2, stdin);
-    choice = atoi(buff);
-
-    switch (choice)
+    switch (input_s())
     {
     case 1:
         registration();
@@ -96,8 +93,6 @@ void registration()
 
     for (int i = 0; i < 4; i++)
         buffer[i] = (char *)malloc(MAX_LENGTH * sizeof(char)); //allocating memory
-
-    getchar(); //cleaning buffer
 
     printf("Enter first name : ");
     fgets(buffer[0], MAX_LENGTH, stdin);
@@ -130,7 +125,7 @@ void registration()
 void login()
 {
     User user;
-    getchar();
+
     printf("\nUserID : ");
     gets(user.userID);
     char *line_p;
@@ -145,11 +140,17 @@ void login()
     if (isRegistered(user))
     {
         printf("You are successfully logged in, welcome :-)\n\n");
-        reservation(user);
+        while (TRUE)
+        {
+            if (!reservation(user))
+                break;
+        }
     }
     else
+    {
         printf("\nYour UserID or password is incorrect, please try again :-(\n");
-    back_to_main();
+        back_to_main();
+    }
 }
 
 void quit()
@@ -159,8 +160,13 @@ void quit()
 
 void back_to_main()
 {
+    press_any_key_to_continue();
+}
+
+void press_any_key_to_continue()
+{
     //implementation of 'press any key to continue' by platform.
-    printf("press any key to continue...\n");
+    printf("Press any key to continue...\n");
     if (strcmp(PLATFORM_NAME, "windows") == 0)
         system("PAUSE");
     else if (strcmp(PLATFORM_NAME, "unix") == 0)
@@ -198,29 +204,27 @@ boolean isRegistered(User user)
     return FALSE;
 }
 
-void reservation(User user)
+int reservation(User user)
 {
     printf("Reservation Menu\n\n");
     display_seats();
     printf("1 : reserve a seat\n"
            "2 : cancel a seat\n"
            "3 : Main Menu\n"
-           "Enter your choice :");
+           "Enter your choice :\n");
 
-    //for safe input
-    int choice;
-    char *buff = (char *)malloc(sizeof(char));
-    fgets(buff, 2, stdin);
-    choice = atoi(buff);
-
-    switch (choice)
+    switch (input_s())
     {
     case 1:
         seat_reservation(user);
+        break;
     case 2:
         seat_cancelation(user);
+        break;
     default:
+        return FALSE;
     }
+    return TRUE;
 }
 
 void display_seats()
@@ -233,4 +237,41 @@ void display_seats()
     {
         printf("Row %d:\t%4d\t%4d\t%4d\t%4d\n", i + 1, seat[i][0], seat[i][1], seat[i][2], seat[i][3]);
     }
+}
+
+void seat_reservation(User user)
+{
+    printf("How many seats do you want to reserve?\n");
+    int n = input_s();
+    display_seats();
+    for (int i = 0; i < n; i++)
+    {
+        printf("Which row do you want to choose? : ");
+        int row = input_s();
+        printf("Which seat do you want to select? : ");
+        int col = input_s();
+        seat[row - 1][col - 1] = TRUE;
+    }
+    printf("Reservation complete, thank you :-)\n");
+    press_any_key_to_continue();
+}
+
+int input_s()
+{
+    char *buff = (char *)malloc(sizeof(char));
+    fgets(buff, 0xFF, stdin);
+    return atoi(buff);
+}
+
+void seat_cancelation(User user)
+{
+    display_seats();
+    printf("Which row do you want to cancel? : ");
+    int row = input_s();
+    printf("Which column do you want to cancell? :");
+    int col = input_s();
+
+    seat[row - 1][col - 1] = FALSE;
+
+    printf("Your Seat is Cancelled\n");
 }
