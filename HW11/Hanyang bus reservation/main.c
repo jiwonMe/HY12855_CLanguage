@@ -111,6 +111,7 @@ void registration()
     printf("Enter your password : ");
     fgets(buffer[3], MAX_LENGTH, stdin);
 
+    //save as .csv format
     for (char **ptr = buffer; ptr < buffer + 4; ptr++)
     {
         (*ptr)[strlen(*ptr) - 1] = '\0';
@@ -202,12 +203,10 @@ boolean isRegistered(User user)
         strncpy(temp.userID, buff, sizeof(buff));
         buff = strtok(NULL, ", ");
         strncpy(temp.password, buff, sizeof(buff));
-        // printf("%s %s\n", temp.userID, temp.password);
-        // printf("%s %s\n", user.userID, user.password);
-        printf("%d %d\n", strcmp(temp.userID, user.userID), strcmp(temp.password, user.password));
-        printf("%d %d\n", strlen(temp.userID), strlen(user.userID));
 
-        if (strcmp(temp.userID, user.userID) == 0 && strcmp(temp.password, user.password) == 0)
+        printf("", strcmp(temp.userID, user.userID), strcmp(temp.password, user.password));
+
+        if ((strcmp(temp.userID, user.userID) == 0) && (strcmp(temp.password, user.password) == 0))
             return TRUE;
     }
 
