@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+/// @struct for Product data
 typedef struct Product
 {
     char name[100];
@@ -10,6 +11,7 @@ typedef struct Product
 
 int main()
 {
+    /// @declare product
     Product product;
 
     printf("Enter product name: ");
@@ -18,6 +20,7 @@ int main()
     scanf("%f", &product.price);
     printf("Enter quantity: ");
     scanf("%d", &product.quantity);
+    /// calculate amount of products
     product.amount = product.price * product.quantity;
 
     puts("");

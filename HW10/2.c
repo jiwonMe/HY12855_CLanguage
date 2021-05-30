@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+/// @struct for Birthday data
 typedef struct Birth
 {
     int day;
@@ -7,6 +8,7 @@ typedef struct Birth
     int year;
 } Birth;
 
+/// @struct for Person data. (nested)
 typedef struct Person
 {
     char name[100];
@@ -16,6 +18,7 @@ typedef struct Person
 
 int main()
 {
+    ///@initialize person
     Person person;
 
     printf("Enter name: ");

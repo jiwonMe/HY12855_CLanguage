@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+///union
 union Union
 {
     char a[32];
@@ -8,6 +9,7 @@ union Union
     int c;
 } u;
 
+///struct
 struct Struct
 {
     char a[32];

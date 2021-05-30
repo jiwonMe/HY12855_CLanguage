@@ -1,16 +1,18 @@
 #include <stdio.h>
 typedef unsigned char byte_t;
 
+///@union size 32
 typedef union
 {
     unsigned long hex;
     float var;
-} MyUnion;
+} t32;
 
+///@struct for Student data
 typedef struct
 {
-    MyUnion id;
-    MyUnion gpa;
+    t32 id;
+    t32 gpa;
 } Student;
 
 int main()

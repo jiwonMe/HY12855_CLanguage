@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+///@struct for Student data
 typedef struct Student
 {
     int id;
     float gpa;
 } Student;
 
+///@fn make Student, @return Student pointer
 Student *makeStudent(int id, float gpa)
 {
     Student *s = (Student *)malloc(sizeof(Student));
@@ -17,6 +19,7 @@ Student *makeStudent(int id, float gpa)
 
 int main()
 {
+    /// double pointer for a array of pointers
     Student **students = (Student **)malloc(sizeof(Student *) * 2);
 
     students[0] = makeStudent(1, 2.9);
