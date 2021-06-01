@@ -18,7 +18,7 @@ typedef struct Person
 
 int main()
 {
-    ///@initialize person
+    ///@declare person
     Person person;
 
     printf("Enter name: ");
